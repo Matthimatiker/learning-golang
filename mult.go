@@ -18,29 +18,34 @@ func main() {
 }
 
 func printMultiplicationTable(size int) {
-	printHeadline(size)
+	padding := calcPadding(size)
+	printHeadline(size, padding)
 	for i := 1; i <= size; i++ {
-		printNumberCell(i)
+		printNumberCell(i, padding)
 		for j := 1; j <= size; j++ {
-			printNumberCell(i * j)
+			printNumberCell(i * j, padding)
 		}
 		fmt.Println()
 	}
 }
 
-func printHeadline(size int) {
-	printCell(" ")
+func printHeadline(size int, padding int) {
+	printCell(" ", padding)
 	for i := 1; i <= size; i++ {
-		printNumberCell(i)
+		printNumberCell(i, padding)
 	}
 	fmt.Println()
 }
 
-func printNumberCell(value int) {
-	printCell(strconv.Itoa(value))
+func printNumberCell(value int, padding int) {
+	printCell(strconv.Itoa(value), padding)
 }
 
-func printCell(value string) {
-	fmt.Printf("%4s", value)
+func printCell(value string, padding int) {
+	fmt.Printf("%" + strconv.Itoa(padding) + "s", value)
 	fmt.Print(" ")
+}
+
+func calcPadding(size int) (int) {
+	return len(strconv.Itoa(size * size))
 }
