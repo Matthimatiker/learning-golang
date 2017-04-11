@@ -8,7 +8,3 @@ func Reverse(bytes string) string {
 	}
 	return string(reversed)
 }
-
-func Identity(bytes string) string {
-	return bytes
-}

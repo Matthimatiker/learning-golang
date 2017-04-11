@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"github.com/matthimatiker/learning-golang/util"
 )
 
 func main() {
@@ -19,7 +18,7 @@ func main() {
 	scanner := bufio.NewScanner(reader)
 	scanner.Split(bufio.ScanLines)
 	for scanner.Scan() {
-		fmt.Println(util.Identity(scanner.Text()))
+		fmt.Println(scanner.Text())
 	}
 	if err := scanner.Err(); err != nil {
 		panic(err)
