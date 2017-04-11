@@ -1,4 +1,3 @@
 hello
-world
-of
+world of
 golang
