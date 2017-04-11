@@ -8,12 +8,14 @@ import (
 )
 
 func main() {
-	file := os.Args[1]
-	filePointer, err := os.Open(file)
+	filePath := os.Args[1]
+	file, err := os.Open(filePath)
 	if err != nil {
 		panic(err)
 	}
-	reader := bufio.NewReader(filePointer)
+	defer file.Close()
+
+	reader := bufio.NewReader(file)
 	scanner := bufio.NewScanner(reader)
 	scanner.Split(bufio.ScanLines)
 	for scanner.Scan() {
