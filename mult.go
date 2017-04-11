@@ -11,19 +11,19 @@ func main() {
 	if (err != nil) {
 		panic(err)
 	}
-	mult(n)
+	printMultiplicationTable(n)
 }
 
-func mult(n int) {
+func printMultiplicationTable(size int) {
 	fmt.Print(" ")
-	for i := 1; i <= n; i++ {
+	for i := 1; i <= size; i++ {
 		fmt.Print(i, " ")
 	}
 	fmt.Println()
 
-	for i := 1; i <= n; i++ {
+	for i := 1; i <= size; i++ {
 		fmt.Print(i, " ")
-		for j := 1; j <= n; j++ {
+		for j := 1; j <= size; j++ {
 			fmt.Print(i * j, " ")
 		}
 		fmt.Println()
