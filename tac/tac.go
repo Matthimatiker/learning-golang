@@ -1,31 +1,31 @@
 package main
 
 import (
-	"fmt"
-	"os"
 	"bufio"
+	"fmt"
 	"io"
+	"os"
 )
 
 type ReverseReader struct {
-	file *os.File;
-	pos int64
+	file *os.File
+	pos  int64
 }
 
 func NewReverseReader(file *os.File) *ReverseReader {
 	info, err := file.Stat()
-	if (err != nil) {
+	if err != nil {
 		panic(err)
 	}
 	return &ReverseReader{
 		file: file,
-		pos: info.Size(),
+		pos:  info.Size(),
 	}
 }
 
 func (reader *ReverseReader) Read(p []byte) (int, error) {
 	numberOfBytesToRead := len(p)
-	if (int(reader.pos) < numberOfBytesToRead) {
+	if int(reader.pos) < numberOfBytesToRead {
 		// Not enough bytes left, read less
 		numberOfBytesToRead = int(reader.pos)
 	}
@@ -39,7 +39,7 @@ func (reader *ReverseReader) Read(p []byte) (int, error) {
 	_, err := reader.file.ReadAt(buffer, reader.pos)
 	// ...and pass provide the bytes in reverse order.
 	for i := 0; i < numberOfBytesToRead; i++ {
-		p[i] = buffer[numberOfBytesToRead - i - 1]
+		p[i] = buffer[numberOfBytesToRead-i-1]
 	}
 	return numberOfBytesToRead, err
 }
@@ -64,10 +64,10 @@ func main() {
 }
 
 func reverse(bytes string) string {
-	strLength := len(bytes);
+	strLength := len(bytes)
 	reversed := make([]byte, strLength, strLength)
 	for i := 0; i < strLength; i++ {
-		reversed[i] = bytes[strLength - i - 1]
+		reversed[i] = bytes[strLength-i-1]
 	}
 	return string(reversed)
 }
