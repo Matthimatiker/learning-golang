@@ -20,18 +20,27 @@ func main() {
 func printMultiplicationTable(size int) {
 	printHeadline(size)
 	for i := 1; i <= size; i++ {
-		fmt.Print(i, " ")
+		printNumberCell(i)
 		for j := 1; j <= size; j++ {
-			fmt.Print(i * j, " ")
+			printNumberCell(i * j)
 		}
 		fmt.Println()
 	}
 }
 
 func printHeadline(size int) {
-	fmt.Print(" ")
+	printCell(" ")
 	for i := 1; i <= size; i++ {
-		fmt.Print(i, " ")
+		printNumberCell(i)
 	}
 	fmt.Println()
+}
+
+func printNumberCell(value int) {
+	printCell(strconv.Itoa(value))
+}
+
+func printCell(value string) {
+	fmt.Printf("%4s", value)
+	fmt.Print(" ")
 }
