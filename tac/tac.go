@@ -8,8 +8,7 @@ import (
 )
 
 func main() {
-	file := "tac/tac.go"
-	fmt.Println(file)
+	file := os.Args[1]
 	filePointer, err := os.Open(file)
 	if err != nil {
 		panic(err)
