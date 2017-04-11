@@ -34,7 +34,13 @@ func (reader *ReverseReader) Read(p []byte) (int, error) {
 		return 0, io.EOF
 	}
 	reader.pos -= int64(numberOfBytesToRead)
-	_, err := reader.file.ReadAt(p, reader.pos)
+	// Read the chunk...
+	buffer := make([]byte, numberOfBytesToRead, numberOfBytesToRead)
+	_, err := reader.file.ReadAt(buffer, reader.pos)
+	// ...and pass provide the bytes in reverse order.
+	for i := 0; i < numberOfBytesToRead; i++ {
+		p[i] = buffer[numberOfBytesToRead - i - 1]
+	}
 	return numberOfBytesToRead, err
 }
 
