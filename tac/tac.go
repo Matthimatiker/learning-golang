@@ -15,22 +15,13 @@ func main() {
 	}
 	defer file.Close()
 
-	reader := ReverseReader.NewReverseReader(file)
+	reader := util.NewReverseReader(file)
 	scanner := bufio.NewScanner(reader)
 	scanner.Split(bufio.ScanLines)
 	for scanner.Scan() {
-		fmt.Println(reverse(scanner.Text()))
+		fmt.Println(util.Reverse(scanner.Text()))
 	}
 	if err := scanner.Err(); err != nil {
 		panic(err)
 	}
-}
-
-func reverse(bytes string) string {
-	strLength := len(bytes)
-	reversed := make([]byte, strLength, strLength)
-	for i := 0; i < strLength; i++ {
-		reversed[i] = bytes[strLength-i-1]
-	}
-	return string(reversed)
 }

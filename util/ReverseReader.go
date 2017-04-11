@@ -1,4 +1,4 @@
-package ReverseReader
+package util
 
 import (
 	"os"
