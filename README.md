@@ -81,6 +81,10 @@ dependencies of current project and sub projects
     go get ./... 
 
 
+Generate test coverage from cover file:
+
+    go tool cover -html=cover.out
+
 Übung:
 
 Multiplikationstabelle: n
