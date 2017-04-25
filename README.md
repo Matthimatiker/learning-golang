@@ -68,14 +68,17 @@ world`
 finds possible problems: go vet . 
 
 Executed on import possible per file:
-func init() {
-}
+
+    func init() {
+    }
 
 Dependency Management?
 
 godep -> Ende 2017
 
-go get ./… => dependencies of current project and sub projects
+dependencies of current project and sub projects
+
+    go get ./... 
 
 
 Übung:
