@@ -31,6 +31,8 @@ func NewStore(filePath string) (*Store, error) {
 	}, nil
 }
 
+// Searches for the value that belongs to the given key.
+// Returns an empty string if the value is not in the store.
 func (store *Store) Get(key string) string {
 	value := ""
 	file := openFile(store.filePath, os.O_RDONLY)
@@ -52,6 +54,7 @@ func (store *Store) Get(key string) string {
 	return value
 }
 
+// Stores the given value in the store.
 func (store *Store) Set(key string, value string) {
 	file := openFile(store.filePath, os.O_APPEND|os.O_WRONLY)
 	defer file.Close()
