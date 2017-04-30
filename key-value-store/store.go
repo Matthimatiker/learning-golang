@@ -14,10 +14,10 @@ func NewStore(filePath string) (*Store, error) {
 	}, nil
 }
 
-func (reader *Store) Get(key string) (string, error) {
-	return "", nil
+func (reader *Store) Get(key string) string {
+	return ""
 }
 
-func (reader *Store) Set(key string, value string) (string, error) {
-	return "", nil
+func (reader *Store) Set(key string, value string) {
+
 }
