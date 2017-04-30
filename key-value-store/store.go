@@ -14,10 +14,10 @@ func NewStore(filePath string) (*Store, error) {
 	_, err := os.Stat(filePath);
 	if (os.IsNotExist(err)) {
 		// File does not exist, try to create it.
-		file, err := os.Create(filePath)
-		if (err != nil) {
+		file, createErr := os.Create(filePath)
+		if (createErr != nil) {
 			// Could not create file.
-			return nil, err
+			return nil, createErr
 		}
 		file.Close()
 		err = nil
@@ -28,7 +28,7 @@ func NewStore(filePath string) (*Store, error) {
 	}
 	return &Store{
 		filePath: filePath,
-	}, nil
+	}, err
 }
 
 // Searches for the value that belongs to the given key.
