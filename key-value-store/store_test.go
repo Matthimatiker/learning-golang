@@ -46,6 +46,16 @@ func Test_CreatesFileIfItDoesNotExist(t *testing.T) {
 	assert.New(t).Nil(err, "Store did not create file.")
 }
 
+func Test_StoreDoesNotReturnErrorIfItCreatesFile(t *testing.T) {
+	temporaryFile := createTemporaryFile()
+	os.Remove(temporaryFile)
+	defer os.Remove(temporaryFile)
+
+	_, err := NewStore(temporaryFile)
+
+	assert.New(t).Nil(err, "Store returned error.")
+}
+
 func Test_GetReturnsEmptyStringIfValueIsNotInStore(t *testing.T) {
 	assert.New(t).Equal("", store.Get("missing"))
 }
