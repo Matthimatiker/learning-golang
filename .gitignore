@@ -1,1 +1,4 @@
+# IDE files
+/.idea/
+# Compiled binary
 /learning-golang
