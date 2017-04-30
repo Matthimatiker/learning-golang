@@ -66,6 +66,15 @@ func (store *Store) Set(key string, value string) {
 	assertNoError(err)
 }
 
+// Splits the given string into key and value (separated by "=").
+func ToKeyValue(text string) (key string, value string) {
+	parts := strings.SplitN(text, "=", 2)
+	if (len(parts) == 1) {
+		return parts[0], ""
+	}
+	return parts[0], parts[1]
+}
+
 // Opens the file with the given mode. Panics in case of error
 // as that should not happen: File is checked during creation of
 // store.

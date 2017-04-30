@@ -73,6 +73,30 @@ func Test_ReadsFromExistingFile(t *testing.T) {
 	assert.New(t).Equal("my-value", newStore.Get("my-key"))
 }
 
+func Test_ToKeyValueReturnsCorrectKey(t *testing.T) {
+	key, _ := ToKeyValue("abc=def")
+
+	assert.New(t).Equal("abc", key)
+}
+
+func Test_ToKeyValueReturnsCorrectValue(t *testing.T) {
+	_, value := ToKeyValue("abc=def")
+
+	assert.New(t).Equal("def", value)
+}
+
+func Test_ToKeyValueReturnsWholeTextAsKeyIfThereIsNoSeparator(t *testing.T) {
+	key, _ := ToKeyValue("abc")
+
+	assert.New(t).Equal("abc", key)
+}
+
+func Test_ToKeyValueReturnsEmptyStringAsValueIfThereIsNoSeparator(t *testing.T) {
+	_, value := ToKeyValue("abc")
+
+	assert.New(t).Equal("", value)
+}
+
 // Creates a temporary file and returns its path.
 func createTemporaryFile() string {
 	temporaryFile, err := ioutil.TempFile(os.TempDir(), "key_value_store_")
