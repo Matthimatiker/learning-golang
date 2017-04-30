@@ -66,6 +66,11 @@ func (store *Store) Set(key string, value string) {
 	assertNoError(err)
 }
 
+// Checks if the given string contains a key/value pair
+func IsKeyValuePair(text string) bool {
+	return strings.Contains(text, "=")
+}
+
 // Splits the given string into key and value (separated by "=").
 func ToKeyValue(text string) (key string, value string) {
 	parts := strings.SplitN(text, "=", 2)

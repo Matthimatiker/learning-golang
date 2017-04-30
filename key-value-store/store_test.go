@@ -97,6 +97,18 @@ func Test_ToKeyValueReturnsEmptyStringAsValueIfThereIsNoSeparator(t *testing.T) 
 	assert.New(t).Equal("", value)
 }
 
+func Test_IsKeyValuePairReturnsFalseIfNoValueIsPresent(t *testing.T) {
+	assert.New(t).False(IsKeyValuePair("abc"))
+}
+
+func Test_IsKeyValuePairReturnsTrueIfKeyAndValueArePresent(t *testing.T) {
+	assert.New(t).True(IsKeyValuePair("abc=def"))
+}
+
+func Test_IsKeyValuePairReturnsTrueIfValueIsEmpty(t *testing.T) {
+	assert.New(t).True(IsKeyValuePair("abc="))
+}
+
 // Creates a temporary file and returns its path.
 func createTemporaryFile() string {
 	temporaryFile, err := ioutil.TempFile(os.TempDir(), "key_value_store_")
