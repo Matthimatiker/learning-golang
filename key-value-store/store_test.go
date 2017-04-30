@@ -10,17 +10,12 @@ import (
 
 var store *Store
 func TestMain(m *testing.M) {
-	temporaryFile, err := ioutil.TempFile(os.TempDir(), "key_value_store_")
-	if err != nil {
-		log.Fatal(err)
-	}
-	temporaryFile.Close()
-	defer func () {
-		os.Remove(temporaryFile.Name())
-	}()
-	store, err = NewStore(temporaryFile.Name())
+	temporaryFile := createTemporaryFile()
+	defer os.Remove(temporaryFile)
+	var err error
+	store, err = NewStore(temporaryFile)
 	if (err != nil) {
-		log.Fatal("Cannot create temporary key value store.")
+		log.Fatalf("Cannot create temporary key value store: %v", err)
 	}
 
 	returnCode := m.Run()
@@ -37,7 +32,17 @@ func Test_ReturnsErrorIfInvalidFilePathIsProvided(t *testing.T) {
 }
 
 func Test_CreatesFileIfItDoesNotExist(t *testing.T) {
+	temporaryFile := createTemporaryFile()
+	os.Remove(temporaryFile)
+	defer os.Remove(temporaryFile)
+	var err error
+	_, err = os.Stat(temporaryFile);
+	assert.New(t).True(os.IsNotExist(err), "File was not removed.")
 
+	NewStore(temporaryFile)
+
+	_, err = os.Stat(temporaryFile);
+	assert.New(t).Nil(err, "Store did not create file.")
 }
 
 func Test_GetReturnsEmptyStringIfValueIsNotInStore(t *testing.T) {
@@ -54,4 +59,14 @@ func Test_SetOverwritesPreviousValue(t *testing.T) {
 
 func Test_ReadsFromExistingFile(t *testing.T) {
 
+}
+
+// Creates a temporary file and returns its path.
+func createTemporaryFile() string {
+	temporaryFile, err := ioutil.TempFile(os.TempDir(), "key_value_store_")
+	if err != nil {
+		log.Fatal(err)
+	}
+	temporaryFile.Close()
+	return temporaryFile.Name()
 }
