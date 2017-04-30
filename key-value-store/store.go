@@ -47,9 +47,7 @@ func (store *Store) Get(key string) string {
 			value = lineValue
 		}
 	}
-	if err := scanner.Err(); err != nil {
-		panic(err)
-	}
+	assertNoError(scanner.Err())
 
 	return value
 }
@@ -60,13 +58,9 @@ func (store *Store) Set(key string, value string) {
 
 	// We are adding values to the store in O(1), yay!
 	_, err := file.WriteString(key + "=" + value + "\n")
-	if (err != nil) {
-		panic(err)
-	}
+	assertNoError(err)
 	err = file.Sync()
-	if (err != nil) {
-		panic(err)
-	}
+	assertNoError(err)
 }
 
 // Opens the file with the given mode. Panics in case of error
@@ -74,8 +68,13 @@ func (store *Store) Set(key string, value string) {
 // store.
 func openFile(path string, mode int) *os.File {
 	file, err := os.OpenFile(path, mode, os.ModeExclusive)
+	assertNoError(err)
+	return file
+}
+
+// Asserts that there is no error, panics otherwise.
+func assertNoError(err error) {
 	if (err != nil) {
 		panic(err)
 	}
-	return file
 }
