@@ -10,20 +10,20 @@ import (
 
 var store *Store
 var temporaryFile string
-func TestMain(m *testing.M) {
+
+func setUpStore() {
 	temporaryFile = createTemporaryFile()
-	defer os.Remove(temporaryFile)
 	var err error
 	store, err = NewStore(temporaryFile)
 	if (err != nil) {
 		log.Fatalf("Cannot create temporary key value store: %v", err)
 	}
+}
 
-	returnCode := m.Run()
-
+func tearDownStore() {
+	os.Remove(temporaryFile)
 	store = nil
-
-	os.Exit(returnCode)
+	temporaryFile = ""
 }
 
 func Test_ReturnsErrorIfInvalidFilePathIsProvided(t *testing.T) {
@@ -57,16 +57,25 @@ func Test_StoreDoesNotReturnErrorIfItCreatesFile(t *testing.T) {
 }
 
 func Test_GetReturnsEmptyStringIfValueIsNotInStore(t *testing.T) {
+	setUpStore()
+	defer tearDownStore()
+
 	assert.New(t).Equal("", store.Get("missing"))
 }
 
 func Test_GetReturnsValueFromStore(t *testing.T) {
+	setUpStore()
+	defer tearDownStore()
+
 	store.Set("my-key", "my-value")
 
 	assert.New(t).Equal("my-value", store.Get("my-key"))
 }
 
 func Test_SetOverwritesPreviousValue(t *testing.T) {
+	setUpStore()
+	defer tearDownStore()
+
 	store.Set("my-key", "my-value")
 	store.Set("my-key", "my-new-value")
 
@@ -74,6 +83,9 @@ func Test_SetOverwritesPreviousValue(t *testing.T) {
 }
 
 func Test_ReadsFromExistingFile(t *testing.T) {
+	setUpStore()
+	defer tearDownStore()
+
 	store.Set("my-key", "my-value")
 
 	// Read with another store instance from the same file.
@@ -84,12 +96,18 @@ func Test_ReadsFromExistingFile(t *testing.T) {
 }
 
 func Test_AllReturnsEmptyMapIfStoreIsEmpty(t *testing.T) {
+	setUpStore()
+	defer tearDownStore()
+
 	all := store.All()
 
 	assert.New(t).Len(all, 0)
 }
 
 func Test_AllReturnsCorrectValues(t *testing.T) {
+	setUpStore()
+	defer tearDownStore()
+
 	store.Set("a", "b")
 	store.Set("c", "d")
 
@@ -101,6 +119,9 @@ func Test_AllReturnsCorrectValues(t *testing.T) {
 }
 
 func Test_AllContainsCorrectValuesIfKeysWereOverwritten(t *testing.T) {
+	setUpStore()
+	defer tearDownStore()
+
 	store.Set("a", "b")
 	store.Set("c", "d")
 	store.Set("a", "oha")
