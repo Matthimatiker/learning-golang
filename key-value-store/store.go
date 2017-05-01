@@ -66,6 +66,11 @@ func (store *Store) Set(key string, value string) {
 	assertNoError(err)
 }
 
+// Returns all values in the store.
+func (store *Store) All() (map[string]string) {
+	return nil
+}
+
 // Checks if the given string contains a key/value pair
 func IsKeyValuePair(text string) bool {
 	return strings.Contains(text, "=")
