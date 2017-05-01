@@ -84,15 +84,31 @@ func Test_ReadsFromExistingFile(t *testing.T) {
 }
 
 func Test_AllReturnsEmptyMapIfStoreIsEmpty(t *testing.T) {
+	all := store.All()
 
+	assert.New(t).Len(all, 0)
 }
 
 func Test_AllReturnsCorrectValues(t *testing.T) {
+	store.Set("a", "b")
+	store.Set("c", "d")
 
+	all := store.All()
+
+	assert.New(t).Equal("b", all["a"])
+	assert.New(t).Equal("d", all["c"])
+	assert.New(t).Len(all, 2)
 }
 
 func Test_AllContainsCorrectValuesIfKeysWereOverwritten(t *testing.T) {
+	store.Set("a", "b")
+	store.Set("c", "d")
+	store.Set("a", "oha")
 
+	all := store.All()
+
+	assert.New(t).Equal("oha", all["a"])
+	assert.New(t).Len(all, 2)
 }
 
 func Test_ToKeyValueReturnsCorrectKey(t *testing.T) {
