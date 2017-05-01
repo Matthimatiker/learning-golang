@@ -23,17 +23,33 @@ Windows-Binary (exe):
 
 GOOS=
 
-Data types:
+### Data types ###
 
 := init with type inference  
 default int: platform dependent  
 rune = unicode character  
-string = byte list  
-map[key_type]value_type{}  
+string = byte list 
+ 
+#### Maps ####
+
+Declaration:
+
+    map[key_type]value_type{}  
+
+Common operations:
 
 - len(map)
 - delete(map, “key”)
 - value, exists := map[“key”]
+
+Iteration over map:
+
+    for key, value := range myMap {
+    }
+
+Order of map iteration is random:
+
+- https://nathanleclaire.com/blog/2014/04/27/a-surprising-feature-of-golang-that-colored-me-impressed/
 
 _ = unused var placeholder  
 Array: [size]type{“a”, “b”}  
