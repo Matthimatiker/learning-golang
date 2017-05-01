@@ -13,8 +13,7 @@ func main() {
 	}
 	if (len(os.Args) == 1) {
 		for key, value := range store.All() {
-			fmt.Printf("> %s = %s", key, value)
-			fmt.Println()
+			printPair(key, value)
 		}
 		return
 	}
@@ -26,9 +25,14 @@ func main() {
 		} else {
 			value = store.Get(key)
 		}
-		fmt.Printf("> %s = %s", key, value)
-		fmt.Println()
+		printPair(key, value)
 	}
+}
+
+// Outputs the given key and value.
+func printPair(key string, value string) {
+	fmt.Printf("> %s = %s", key, value)
+	fmt.Println()
 }
 
 func getStoreFile() string {
