@@ -68,7 +68,20 @@ func (store *Store) Set(key string, value string) {
 
 // Returns all values in the store.
 func (store *Store) All() (map[string]string) {
-	return nil
+	file := openFile(store.filePath, os.O_RDONLY)
+	defer file.Close()
+
+	all := map[string]string{}
+	reader := bufio.NewReader(file)
+	scanner := bufio.NewScanner(reader)
+	scanner.Split(bufio.ScanLines)
+	for scanner.Scan() {
+		key, value := ToKeyValue(scanner.Text())
+		all[key] = value
+	}
+	assertNoError(scanner.Err())
+
+	return all
 }
 
 // Checks if the given string contains a key/value pair
