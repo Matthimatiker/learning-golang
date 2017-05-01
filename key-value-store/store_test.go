@@ -83,6 +83,18 @@ func Test_ReadsFromExistingFile(t *testing.T) {
 	assert.New(t).Equal("my-value", newStore.Get("my-key"))
 }
 
+func Test_AllReturnsEmptyMapIfStoreIsEmpty(t *testing.T) {
+
+}
+
+func Test_AllReturnsCorrectValues(t *testing.T) {
+
+}
+
+func Test_AllContainsCorrectValuesIfKeysWereOverwritten(t *testing.T) {
+
+}
+
 func Test_ToKeyValueReturnsCorrectKey(t *testing.T) {
 	key, _ := ToKeyValue("abc=def")
 
