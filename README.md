@@ -79,8 +79,6 @@ Attribute ucfirst => public
 (*var) => de-reference var
 created by make() => pointer to data
 
-Package Assertions: stretchr/testify
-
 Backticks: multiline string `hello
 world`
 
@@ -99,10 +97,32 @@ dependencies of current project and sub projects
 
     go get ./... 
 
+### Testing ###
+
+Improved assertions are available in the following package:
+
+    stretchr/testify
 
 Generate test coverage from cover file:
 
     go tool cover -html=cover.out
+    
+In an test, ``TestMain`` can be used to define setup and tear down for the *whole* test case:
+    
+    func TestMain(m *testing.M) {
+        // setup
+    
+        // *all* tests are running here:
+        returnCode := m.Run()
+    
+        // tear down
+    
+        os.Exit(returnCode)
+    }
+    
+This construct is comparable to ``setUpClass`` and ``tearDownClass`` in PHPUnit.
+
+
 
 Übung:
 
