@@ -12,10 +12,6 @@ The run command *cannot* be used when passing the path to another ``*.go`` file 
 
     go run cat/cat.go mult/mult.go
 
-Running tests of sub package with verbose output:
-
-    go test -v github.com/matthimatiker/learning-golang/key-value-store
-
 
 ## Notices ##
 
@@ -98,6 +94,10 @@ dependencies of current project and sub projects
     go get ./... 
 
 ### Testing ###
+
+Running tests of sub package with verbose output:
+
+    go test -v github.com/matthimatiker/learning-golang/key-value-store
 
 Improved assertions are available in the following package:
 
