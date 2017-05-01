@@ -25,18 +25,18 @@ GOOS=
 
 Data types:
 
-:= init with type inference
-default int: platform dependent
-rune = unicode character
-string = byte list
-map[key_type]value_type{}
+:= init with type inference  
+default int: platform dependent  
+rune = unicode character  
+string = byte list  
+map[key_type]value_type{}  
 
 - len(map)
 - delete(map, “key”)
 - value, exists := map[“key”]
 
-_ = unused var placeholder
-Array: [size]type{“a”, “b”}
+_ = unused var placeholder  
+Array: [size]type{“a”, “b”}  
 Slice: []type{}
 
 - newSlice = append(slice, “a”, “b”)
