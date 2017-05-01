@@ -12,6 +12,7 @@ func main() {
 		panic(err)
 	}
 	if (len(os.Args) == 1) {
+		// No arguments provided, print whole store content.
 		for key, value := range store.All() {
 			printPair(key, value)
 		}
@@ -21,7 +22,6 @@ func main() {
 		key, value := key_value_store.ToKeyValue(arg)
 		if (key_value_store.IsKeyValuePair(arg)) {
 			store.Set(key, value)
-
 		} else {
 			value = store.Get(key)
 		}
