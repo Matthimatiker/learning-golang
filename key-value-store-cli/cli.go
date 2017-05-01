@@ -11,7 +11,14 @@ func main() {
 	if (err != nil) {
 		panic(err)
 	}
-	for _, arg :=range os.Args[1:] {
+	if (len(os.Args) == 1) {
+		for key, value := range store.All() {
+			fmt.Printf("> %s = %s", key, value)
+			fmt.Println()
+		}
+		return
+	}
+	for _, arg := range os.Args[1:] {
 		key, value := key_value_store.ToKeyValue(arg)
 		if (key_value_store.IsKeyValuePair(arg)) {
 			store.Set(key, value)
