@@ -182,5 +182,5 @@ Files: cat, tac (umgekehrt?), wc wordcount
 Package bufio (Scanner)
 Key/Value store on CLI
 
-
+KeyValueStore: define interface
 
