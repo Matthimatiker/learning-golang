@@ -78,6 +78,30 @@ created by make() => pointer to data
 Backticks: multiline string `hello
 world`
 
+#### Type Alias ####
+
+    type Foo string
+
+#### Type Casting ####
+
+Cast to compatible type:
+
+    casted, ok := value.(target type)
+    
+Type check language construct:
+    
+    switch casted := value.(type) {
+    case string:
+        //  casted of type string
+    case int:
+        // casted of type int
+    default:
+        // any other type
+    }
+
+
+ToDo: move the following section
+
 finds possible problems: go vet . 
 
 Executed on import possible per file:
@@ -121,6 +145,33 @@ In an test, ``TestMain`` can be used to define setup and tear down for the *whol
     }
     
 This construct is comparable to ``setUpClass`` and ``tearDownClass`` in PHPUnit.
+
+Test setup/tearDown pattern:
+
+    setUp := func () (func ()) {
+        return func () {
+        
+        }
+    }
+    tearDown := setUp()
+    defer tearDown()
+
+### Error Handling ###
+
+Handle panics:
+
+    defer func () {
+        if p := recover(); p != nil {
+            // handle panic
+        }
+    }()
+    panic("oh no!")
+    
+Prevent errors with static code analyis:
+    
+    go vet
+    
+Tool: errcheck (ToDo: find link)
 
 
 
