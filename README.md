@@ -23,8 +23,20 @@ GOOS=
 
 := init with type inference  
 default int: platform dependent  
-rune = unicode character  
-string = byte list 
+
+#### Strings ####
+
+A string is a byte list.  
+A ``rune`` represents a unicode character (can contain multiple bytes).  
+
+Backticks are used to assign multiline strings: 
+
+    myString := `hello
+    world`
+    
+``len()`` returns the length in bytes:
+    
+    lengthInBytes := len(myString)
  
 #### Maps ####
 
@@ -65,20 +77,16 @@ for key, value := rang list {
 infinite: for { code; }
 
 CLI parameters: os.Args
-Unfolding: slice…
-
-Attribute ucfirst => public
-          lcfirst => package visibility
+Unfolding: slice...
 
 *type => pointer
 &var => reference to var
 (*var) => de-reference var
 created by make() => pointer to data
 
-Backticks: multiline string `hello
-world`
-
 #### Type Alias ####
+          
+Create a type alias:
 
     type Foo string
 
@@ -116,6 +124,20 @@ godep -> Ende 2017
 dependencies of current project and sub projects
 
     go get ./... 
+    
+#### Visibility ####
+
+Types (and attributes) starting with uppercase letter are *public*:
+
+    type MyType struct {
+        Value string
+    }
+    
+Types (and attributes) starting with lowercase character have package visibility:
+
+    type myType struct {
+        value string
+    }
 
 ### Testing ###
 
