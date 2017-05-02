@@ -19,6 +19,15 @@ Windows-Binary (exe):
 
 GOOS=
 
+default: pass by value
+
+_ = unused var placeholder  
+
+*type => pointer
+&var => reference to var
+(*var) => de-reference var
+created by make() => pointer to data
+
 ### Data types ###
 
 ``:=`` initializes a variable with type inference:
@@ -65,30 +74,30 @@ Order of map iteration is random:
 
 - https://nathanleclaire.com/blog/2014/04/27/a-surprising-feature-of-golang-that-colored-me-impressed/
 
-_ = unused var placeholder  
-Array: [size]type{“a”, “b”}  
-Slice: []type{}
+#### Arrays ####
 
-- newSlice = append(slice, “a”, “b”)
-- newSlice = slice[start : end]
-    - end optional: slice[start:]
-- slice := make(type, len, capacity)
+Array: [size]type{“a”, “b”}  
+
+#### Slices ####
+
+A slice is a list of variable length.
+
+Declaration: ``[]type{}``
+
+- ``newSlice = append(slice, “a”, “b”)``
+- ``newSlice = slice[start : end]``
+    - end optional: ``slice[start:]``
+- ``slice := make(type, len, capacity)``
 - cap(slice), len(slice)
 - capacity is doubled when reached
 
-pass by value
 
-for key, value := rang list {
+for key, value := range list {
 }
 infinite: for { code; }
 
 CLI parameters: os.Args
-Unfolding: slice...
-
-*type => pointer
-&var => reference to var
-(*var) => de-reference var
-created by make() => pointer to data
+Unfolding: ``slice...``
 
 #### Type Alias ####
           
