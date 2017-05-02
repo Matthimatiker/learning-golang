@@ -21,8 +21,14 @@ GOOS=
 
 ### Data types ###
 
-:= init with type inference  
-default int: platform dependent  
+``:=`` initializes a variable with type inference:
+  
+    x := 42
+    // <=>
+    var y int
+    y = 42
+  
+The default int type is platform dependent (int64 vs. int32).  
 
 #### Strings ####
 
