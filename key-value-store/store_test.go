@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var store *fileKeyValueStore
+var store KeyValueStore
 var temporaryFile string
 
 func setUpStore() {

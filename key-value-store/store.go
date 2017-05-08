@@ -6,11 +6,17 @@ import (
 	"strings"
 )
 
+type KeyValueStore interface {
+	Get(key string) string
+	Set(key string, value string)
+	All() (map[string]string)
+}
+
 type fileKeyValueStore struct {
 	filePath string
 }
 
-func NewStore(filePath string) (*fileKeyValueStore, error) {
+func NewStore(filePath string) (KeyValueStore, error) {
 	_, err := os.Stat(filePath);
 	if (os.IsNotExist(err)) {
 		// File does not exist, try to create it.
