@@ -6,11 +6,11 @@ import (
 	"strings"
 )
 
-type Store struct {
+type fileKeyValueStore struct {
 	filePath string
 }
 
-func NewStore(filePath string) (*Store, error) {
+func NewStore(filePath string) (*fileKeyValueStore, error) {
 	_, err := os.Stat(filePath);
 	if (os.IsNotExist(err)) {
 		// File does not exist, try to create it.
@@ -26,14 +26,14 @@ func NewStore(filePath string) (*Store, error) {
 		// Unexpected file error.
 		return nil, err
 	}
-	return &Store{
+	return &fileKeyValueStore{
 		filePath: filePath,
 	}, err
 }
 
 // Searches for the value that belongs to the given key.
 // Returns an empty string if the value is not in the store.
-func (store *Store) Get(key string) string {
+func (store *fileKeyValueStore) Get(key string) string {
 	value := ""
 	file := openFile(store.filePath, os.O_RDONLY)
 	defer file.Close()
@@ -55,7 +55,7 @@ func (store *Store) Get(key string) string {
 }
 
 // Stores the given value in the store.
-func (store *Store) Set(key string, value string) {
+func (store *fileKeyValueStore) Set(key string, value string) {
 	file := openFile(store.filePath, os.O_APPEND|os.O_WRONLY)
 	defer file.Close()
 
@@ -67,7 +67,7 @@ func (store *Store) Set(key string, value string) {
 }
 
 // Returns all values in the store.
-func (store *Store) All() (map[string]string) {
+func (store *fileKeyValueStore) All() (map[string]string) {
 	file := openFile(store.filePath, os.O_RDONLY)
 	defer file.Close()
 
