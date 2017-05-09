@@ -221,3 +221,6 @@ Key/Value store on CLI
 
 KeyValueStore: define interface
 
+KeyValueStore as HTTP Server
+- REST interface
+- https://github.com/smancke/talks/blob/gh-pages/golang_schulung/08_web_development_teil1.md#%C3%9Cbung-rest-interface-f%C3%BCr-den-kv-store
