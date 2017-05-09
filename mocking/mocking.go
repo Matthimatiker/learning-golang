@@ -9,5 +9,5 @@ type Contacts struct {
 }
 
 func (contacts *Contacts) SaveName(name string) {
-
+	contacts.store.Set("name", name)
 }
