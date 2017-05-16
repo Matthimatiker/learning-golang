@@ -17,6 +17,8 @@ func main() {
 		panic(err)
 	}
 	handler := key_value_store.NewStoreHandler(store)
+	fmt.Println("Using store at:")
+	fmt.Println(getStoreFile())
 	fmt.Println("Listening on:")
 	fmt.Println("http://localhost:8080");
 	panic(http.ListenAndServe(":8080", handler))
