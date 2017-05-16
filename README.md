@@ -194,7 +194,7 @@ Test setup/tearDown pattern:
     defer tearDown()
 
 
-Frameworks:
+Resources:
 
 - https://github.com/stretchr/testify (Matcher
 - https://github.com/onsi/gomega (Matcher)
@@ -218,6 +218,12 @@ Prevent errors with static code analyis:
     
 Tool: errcheck (ToDo: find link)
 
+
+### Web ###
+
+Resources:
+
+- https://github.com/PuerkitoBio/goquery (query HTML documents)
 
 ### Misc ###
 
