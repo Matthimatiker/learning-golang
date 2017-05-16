@@ -8,7 +8,11 @@ import (
 )
 
 func main() {
-	res, err := http.Post("http://tarent.de", "text/plain", bytes.NewBufferString("Hello World!"))
+	post("http://tarent.de")
+}
+
+func post(url string) {
+	res, err := http.Post(url, "text/plain", bytes.NewBufferString("Hello World!"))
 	if (err != nil) {
 		panic(err)
 	}
