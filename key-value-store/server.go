@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"io/ioutil"
 	"fmt"
+	"strings"
 )
 
 type storeHandler struct {
@@ -19,7 +20,7 @@ func NewStoreHandler(store KeyValueStore) http.Handler {
 
 // Handles a HTTP request and maps it to the store.
 func (handler *storeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	key := r.URL.Path
+	key := strings.TrimPrefix(r.URL.Path, "/")
 	switch method := r.Method; method {
 	case http.MethodGet:
 		value := handler.store.Get(key);
