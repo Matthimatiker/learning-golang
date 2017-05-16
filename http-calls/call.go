@@ -3,24 +3,25 @@ package main
 import (
 	"net/http"
 	"bytes"
-	"os"
 	"io/ioutil"
 )
 
 func main() {
-	post("http://tarent.de")
+	println(post("http://tarent.de"))
 }
 
-func post(url string) {
+func post(url string) string {
 	res, err := http.Post(url, "text/plain", bytes.NewBufferString("Hello World!"))
 	if (err != nil) {
 		panic(err)
 	}
-	res.Header.WriteSubset(os.Stdout, nil)
+	result := bytes.NewBufferString("")
+	res.Header.WriteSubset(result, nil)
 	body, err := ioutil.ReadAll(res.Body)
 	if (err != nil) {
 		panic(err)
 	}
-	println()
-	println(string(body))
+	result.WriteString("\n")
+	result.WriteString(string(body))
+	return result.String()
 }
