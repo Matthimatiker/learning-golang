@@ -13,6 +13,14 @@ func setUp() (http.Handler, KeyValueStore) {
 	return NewStoreHandler(store), store
 }
 
+func Test_InMemoryStoreWorks(t *testing.T) {
+	_, store := setUp()
+
+	store.Set("hello", "world")
+
+	assert.Equal(t, "world", store.Get("hello"))
+}
+
 func Test_ReturnsCode201OnCreation(t *testing.T) {
 	handler, _ := setUp()
 
