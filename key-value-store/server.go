@@ -1,6 +1,10 @@
 package key_value_store
 
-import "net/http"
+import (
+	"net/http"
+	"io/ioutil"
+	"fmt"
+)
 
 type storeHandler struct {
 	store KeyValueStore
@@ -13,6 +17,28 @@ func NewStoreHandler(store KeyValueStore) http.Handler {
 	}
 }
 
+// Handles a HTTP request and maps it to the store.
 func (handler *storeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	key := r.URL.Path
+	switch method := r.Method; method {
+	case http.MethodGet:
+		value := handler.store.Get(key);
+		if (value == "") {
+			w.WriteHeader(404);
+		} else {
+			w.WriteHeader(200)
+			fmt.Fprint(w, value)
+		}
+	case http.MethodPost:
+		value, err := ioutil.ReadAll(r.Body)
+		if (err != nil) {
+			http.Error(w, err.Error(), 500)
+			return;
+		}
+		handler.store.Set(key, string(value))
+		w.WriteHeader(201)
+	default:
+		http.Error(w, "Unsupported method '" + method + "'", 400)
+	}
 
 }
