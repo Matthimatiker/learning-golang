@@ -70,6 +70,17 @@ func Test_ReturnsCode404IfNotExists(t *testing.T) {
 	assert.Equal(t, 404, w.Code)
 }
 
+func Test_RejectsRequestWithUnsupportedMethod(t *testing.T) {
+	handler, _ := setUp()
+
+	req := httptest.NewRequest("PATCH", "/hello", nil)
+	w := httptest.NewRecorder()
+
+	handler.ServeHTTP(w, req)
+
+	assert.Equal(t, 400, w.Code)
+}
+
 type inMemoryStore struct {
 	data map[string]string
 }
