@@ -29,7 +29,7 @@ func main() {
 	fmt.Println("Using store at:")
 	fmt.Println(getStoreFile())
 	fmt.Println("Listening on:")
-	fmt.Println("http://localhost:8080");
+	fmt.Println("http://localhost:8080")
 	panic(http.ListenAndServe(":8080", handler))
 }
 
