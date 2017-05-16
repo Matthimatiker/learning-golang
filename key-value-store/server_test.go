@@ -2,10 +2,10 @@ package key_value_store
 
 import (
 	"testing"
-	"github.com/sensu/uchiwa/Godeps/_workspace/src/github.com/stretchr/testify/assert"
 	"net/http/httptest"
 	"strings"
 	"net/http"
+	"github.com/stretchr/testify/assert"
 )
 
 func setUp() (http.Handler, KeyValueStore) {
