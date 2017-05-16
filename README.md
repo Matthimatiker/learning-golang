@@ -219,6 +219,14 @@ Prevent errors with static code analyis:
 Tool: errcheck (ToDo: find link)
 
 
+### Misc ###
+
+Import functions from package into current namespace by prefixing with dot:
+
+    import (
+        . "net/http"
+    )
+
 
 Übung:
 
