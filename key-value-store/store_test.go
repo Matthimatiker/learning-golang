@@ -132,6 +132,16 @@ func Test_AllContainsCorrectValuesIfKeysWereOverwritten(t *testing.T) {
 	assert.New(t).Len(all, 2)
 }
 
+func Test_CanHandleValueWithNewLines(t *testing.T) {
+	setUpStore()
+	defer tearDownStore()
+
+	value := "hello\nworld"
+	store.Set("greeting", value)
+
+	assert.New(t).Equal(value, store.Get("greeting"))
+}
+
 func Test_ToKeyValueReturnsCorrectKey(t *testing.T) {
 	key, _ := ToKeyValue("abc=def")
 
