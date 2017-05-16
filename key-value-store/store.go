@@ -4,6 +4,7 @@ import (
 	"os"
 	"bufio"
 	"strings"
+	"encoding/base64"
 )
 
 type KeyValueStore interface {
@@ -52,7 +53,7 @@ func (store *fileKeyValueStore) Get(key string) string {
 		parts := strings.SplitN(scanner.Text(), "=", 2)
 		lineKey, lineValue := parts[0], parts[1]
 		if (lineKey == key) {
-			value = lineValue
+			value = decode(lineValue)
 		}
 	}
 	assertNoError(scanner.Err())
@@ -66,7 +67,7 @@ func (store *fileKeyValueStore) Set(key string, value string) {
 	defer file.Close()
 
 	// We are adding values to the store in O(1), yay!
-	_, err := file.WriteString(key + "=" + value + "\n")
+	_, err := file.WriteString(key + "=" + encode(value) + "\n")
 	assertNoError(err)
 	err = file.Sync()
 	assertNoError(err)
@@ -83,7 +84,7 @@ func (store *fileKeyValueStore) All() (map[string]string) {
 	scanner.Split(bufio.ScanLines)
 	for scanner.Scan() {
 		key, value := ToKeyValue(scanner.Text())
-		all[key] = value
+		all[key] = decode(value)
 	}
 	assertNoError(scanner.Err())
 
@@ -102,6 +103,21 @@ func ToKeyValue(text string) (key string, value string) {
 		return parts[0], ""
 	}
 	return parts[0], parts[1]
+}
+
+// Encodes a value before it is written to the store.
+//
+// Encoding ensures that we get rid of newlines, which are problematic when
+// reading the store file line by line
+func encode(value string) string {
+	return base64.StdEncoding.EncodeToString([]byte(value))
+}
+
+// Decodes a value that is read from store.
+func decode(encodedValue string) string {
+	decoded, err := base64.StdEncoding.DecodeString(encodedValue)
+	assertNoError(err)
+	return string(decoded)
 }
 
 // Opens the file with the given mode. Panics in case of error
