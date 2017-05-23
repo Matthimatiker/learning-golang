@@ -26,6 +26,7 @@ func NewWebClient(url string) (*webClient) {
 }
 
 func (client *webClient) Get(key string) string {
+	// TODO check http status code, err handles only network errors
 	response, err := http.Get(client.toUrl(key))
 	assertNoError(err)
 	value, err := ioutil.ReadAll(response.Body)
