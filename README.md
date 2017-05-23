@@ -230,6 +230,61 @@ Resources:
 
 - https://github.com/PuerkitoBio/goquery (query HTML documents)
 
+### Channels ###
+
+Number of items in channel:
+
+    len(channel)
+    
+Capacity (buffer size) of channel:
+    
+    cap(channel)
+    
+Read from channel:
+    
+    value, exists := <- channel
+    
+Read all values from channel (channel must be closed):
+    
+    for value := range channel {
+    
+    }
+    
+Reading from channel blocks, *if* the channel was not closed.
+
+Close channel:
+
+    close(channel)
+    
+Read from unclosed channel *without* blocking:
+
+    select {
+    case value := channel
+        // Handle value
+    default:
+        // No value found
+    }
+    
+Read from *any* channel that has data:
+
+   select {
+   case value := channelOne
+       // Handle value from channel 1
+   case value := channelTwo
+       // Handle value from channel 2
+   default:
+       // No value found
+   }
+   
+Read from channel with timeout:
+
+    select {
+    case value := channel
+        // Handle value
+    case <- time.After(time.Second)
+        // 1 second timeout reached
+    }
+
 ### Misc ###
 
 Import functions from package into current namespace by prefixing with dot:
