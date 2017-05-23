@@ -11,6 +11,14 @@ type webClient struct {
 	url string
 }
 
+// Creates a new web client that interacts with the store server at the given URL.
+//
+// The web client itself is a SimpleKeyValueStore.
+// Multiple clients can share a key value server without influencing each other
+// by using a  specific URL segment:
+//
+//    firstClient := NewWebClient("http://my-key-value.server/bucket-one")
+//    secondClient := NewWebClient("http://my-key-value.server/bucket-two")
 func NewWebClient(url string) (*webClient) {
 	return &webClient{
 		url: strings.TrimSuffix(url, "/"),
