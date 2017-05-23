@@ -296,4 +296,7 @@ Import functions from package into current namespace by prefixing with dot:
 
 Übung:
 
-- Client for Key-Value-Server
+- Last-Test für Key-Value-Store
+  - parallele Go-Routinen (Anzahl definierbar)
+  - wie viele Calls für Go-Routinen definierbar
+  - Go-Routines read instructions from channel
