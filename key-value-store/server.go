@@ -8,11 +8,11 @@ import (
 )
 
 type storeHandler struct {
-	store KeyValueStore
+	store SimpleKeyValueStore
 }
 
 // Returns a HTTP handler that operates on the given key-value store.
-func NewStoreHandler(store KeyValueStore) http.Handler {
+func NewStoreHandler(store SimpleKeyValueStore) http.Handler {
 	return &storeHandler{
 		store: store,
 	}

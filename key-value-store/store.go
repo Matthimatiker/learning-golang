@@ -13,6 +13,11 @@ type KeyValueStore interface {
 	All() (map[string]string)
 }
 
+type SimpleKeyValueStore interface {
+	Get(key string) string
+	Set(key string, value string)
+}
+
 type fileKeyValueStore struct {
 	filePath string
 }
