@@ -18,7 +18,7 @@ func NewWebClient(url string) (*webClient) {
 }
 
 func (client *webClient) Get(key string) string {
-	response, err := http.Get(client.url + "/" + key)
+	response, err := http.Get(client.toUrl(key))
 	assertNoError(err)
 	value, err := ioutil.ReadAll(response.Body)
 	assertNoError(err)
@@ -26,6 +26,11 @@ func (client *webClient) Get(key string) string {
 }
 
 func (client *webClient) Set(key string, value string) {
-	_, err := http.Post(client.url + "/" + key, "text/plain", bytes.NewBufferString(value))
+	_, err := http.Post(client.toUrl(key), "text/plain", bytes.NewBufferString(value))
 	assertNoError(err)
+}
+
+// Returns the URL that is used to access (read & write) the given key.
+func (client *webClient) toUrl(key string) string {
+	return client.url + "/" + key
 }
