@@ -4,7 +4,7 @@ type webClient struct {
 	url string
 }
 
-func NewWebClient(url string) (SimpleKeyValueStore) {
+func NewWebClient(url string) (*webClient) {
 	return &webClient{
 		url: url,
 	}
