@@ -1,30 +1,139 @@
 package key_value_store
 
-import "testing"
+import (
+	"testing"
+	"github.com/stretchr/testify/assert"
+	"time"
+)
 
 func Test_BenchmarkConfigurationProvidesSensibleDefaultValues(t *testing.T) {
+	config := NewBenchmarkRunConfiguration()
 
+	assert.Condition(t, config.numberOfOperations > 0)
+	assert.Condition(t, config.parallelOperations > 0)
+	assert.Condition(t, config.writeOperationRatio >= 0.0)
+	assert.Condition(t, config.writeOperationRatio <= 1.0)
 }
 
 func Test_BenchmarkConfigurationCanBeConfigured(t *testing.T) {
+	config := NewBenchmarkRunConfiguration().NumberOfOperations(100).ParallelOperations(10).WriteOperationRatio(0.5)
 
+	assert.Equal(t, 100, config.numberOfOperations)
+	assert.Equal(t, 10, config.parallelOperations)
+	assert.Equal(t, 0.5, config.writeOperationRatio)
+}
+
+func Test_BenchmarkConfigurationRejectsInvalidRatioValue(t *testing.T) {
+	assert.Panics(t, func () {
+		NewBenchmarkRunConfiguration().WriteOperationRatio(2.5)
+	})
+}
+
+func Test_BenchmarkConfigurationCanBeConvertedToString(t *testing.T) {
+	config := NewBenchmarkRunConfiguration()
+
+	assert.NotEmpty(t, string(config))
 }
 
 func Test_BenchmarkExecutesCorrectOfOperationsInCaseOfSequentialExecution(t *testing.T) {
+	store := newOperationCountingStore()
+	benchmark := NewBenchmark(store)
 
+	benchmark.run(NewBenchmarkRunConfiguration().NumberOfOperations(100).ParallelOperations(1))
+
+	assert.Equal(t, 100, store.NumberOfOperations())
 }
 
 func Test_BenchmarkExecutesCorrectNumberOfOperationsInCaseOfParallelExecution(t *testing.T) {
+	store := newOperationCountingStore()
+	benchmark := NewBenchmark(store)
 
-}
+	benchmark.run(NewBenchmarkRunConfiguration().NumberOfOperations(100).ParallelOperations(10))
 
-
-func Test_ParallelExecutionIsFasterThanSequential(t *testing.T) {
-
+	assert.Equal(t, 100, store.NumberOfOperations())
 }
 
 func Test_BenchmarkReturnsValidResult(t *testing.T) {
+	store := newOperationCountingStore()
+	benchmark := NewBenchmark(store)
 
+	result := benchmark.run(NewBenchmarkRunConfiguration().NumberOfOperations(100).ParallelOperations(10))
+
+	assert.Condition(t, result.RuntimeInSeconds > 0)
+}
+
+func Test_ParallelExecutionIsFasterThanSequential(t *testing.T) {
+	store := newOperationCountingStore()
+	store.SetDelay(time.Duration(10) * time.Millisecond)
+	benchmark := NewBenchmark(store)
+
+	sequential := benchmark.run(NewBenchmarkRunConfiguration().NumberOfOperations(100).ParallelOperations(1))
+	parallel := benchmark.run(NewBenchmarkRunConfiguration().NumberOfOperations(100).ParallelOperations(10))
+
+	assert.Condition(t, sequential.RuntimeInSeconds > parallel.RuntimeInSeconds)
+}
+
+func Test_PerformsProvidedNumberOfWriteOperations(t *testing.T) {
+	store := newOperationCountingStore()
+	benchmark := NewBenchmark(store)
+
+	benchmark.run(NewBenchmarkRunConfiguration().NumberOfOperations(10000).WriteOperationRatio(0.4))
+
+	// The store might work with random heuristics. Therefore, a bigger
+	// number of operations and a tolerance zone is used in this test.
+	assert.InDelta(t, 0.4, store.WriteRatio(), 0.1)
+}
+
+func Test_BenchmarkResultCanBeConvertedToString(t *testing.T) {
+	config := NewBenchmarkRunConfiguration()
+
+	result := benchmarkRunResult{
+		RuntimeInSeconds: 5,
+		Config: config,
+	}
+
+	assert.NotEmpty(t, string(result))
 }
 
 
+type operationCountingStore struct {
+	delay time.Duration
+	read int
+	write int
+}
+
+// Creates a key-value store mock that counts the number of read/write operations.
+func newOperationCountingStore() (*operationCountingStore) {
+	return &operationCountingStore{
+		delay: time.Duration(0),
+		read: 0,
+		write: 0,
+	}
+}
+
+func (store *operationCountingStore) SetDelay(duration time.Duration) {
+	store.delay = duration
+}
+
+func (store *operationCountingStore) Get(key string) string {
+	time.Sleep(store.delay)
+	store.read++
+	// Return a dummy value, it is not important here.
+	return ""
+}
+
+func (store *operationCountingStore) Set(key string, value string) {
+	time.Sleep(store.delay)
+	store.write++
+}
+
+// Returns the whole number of executed operations.
+func (store *operationCountingStore) NumberOfOperations() int {
+	return store.read + store.write
+}
+
+// Ratio of writes compared to reads.
+// Returns a value between 0.0 and 1.0.
+func (store *operationCountingStore) WriteRatio() float32 {
+	return store.write / store.NumberOfOperations()
+}
