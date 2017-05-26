@@ -65,7 +65,7 @@ func Test_BenchmarkReturnsValidResult(t *testing.T) {
 
 func Test_ParallelExecutionIsFasterThanSequential(t *testing.T) {
 	store := newOperationCountingStore()
-	store.SetDelay(time.Duration(10) * time.Millisecond)
+	store.SetDelay(time.Duration(2) * time.Millisecond)
 	benchmark := NewBenchmark(store)
 
 	sequential := benchmark.run(NewBenchmarkRunConfiguration().NumberOfOperations(100).ParallelOperations(1))
