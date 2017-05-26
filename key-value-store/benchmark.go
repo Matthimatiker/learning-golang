@@ -9,10 +9,9 @@ func NewBenchmark(store SimpleKeyValueStore) *benchmark {
 
 }
 
-
 // Runs a benchmark against the store.
 //
-func (benchmark *benchmark) run(config benchmarkRunConfiguration) float64 {
+func (benchmark *benchmark) run(config benchmarkRunConfiguration) benchmarkRunResult {
 
 }
 
@@ -43,4 +42,13 @@ func (config benchmarkRunConfiguration) ParallelOperations(value int) benchmarkR
 // value must be a float between 0.0 and 1.0.
 func (config benchmarkRunConfiguration) WriteOperationRatio(value float32) benchmarkRunConfiguration {
 
+}
+
+
+// Contains the result of a benchmark run.
+type benchmarkRunResult struct {
+	// The configuration that has been applied.
+	Config benchmarkRunConfiguration
+	// The number of seconds the benchmark took to run.
+	RuntimeInSeconds float64
 }
