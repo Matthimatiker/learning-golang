@@ -9,10 +9,10 @@ import (
 func Test_BenchmarkConfigurationProvidesSensibleDefaultValues(t *testing.T) {
 	config := NewBenchmarkRunConfiguration()
 
-	assert.Condition(t, config.numberOfOperations > 0)
-	assert.Condition(t, config.parallelOperations > 0)
-	assert.Condition(t, config.writeOperationRatio >= 0.0)
-	assert.Condition(t, config.writeOperationRatio <= 1.0)
+	assert.Condition(t, greaterThan(0.0, float64(config.numberOfOperations)))
+	assert.Condition(t, greaterThan(0.0, float64(config.parallelOperations)))
+	assert.Condition(t, greaterThanOrEqual(0.0, float64(config.writeOperationRatio)))
+	assert.Condition(t, greaterThanOrEqual(float64(config.writeOperationRatio), 1.0))
 }
 
 func Test_BenchmarkConfigurationCanBeConfigured(t *testing.T) {
@@ -59,7 +59,7 @@ func Test_BenchmarkReturnsValidResult(t *testing.T) {
 
 	result := benchmark.run(NewBenchmarkRunConfiguration().NumberOfOperations(100).ParallelOperations(10))
 
-	assert.Condition(t, result.Runtime.Seconds() > 0.0)
+	assert.Condition(t, greaterThan(0.0, result.Runtime.Seconds()))
 }
 
 func Test_ParallelExecutionIsFasterThanSequential(t *testing.T) {
@@ -70,7 +70,7 @@ func Test_ParallelExecutionIsFasterThanSequential(t *testing.T) {
 	sequential := benchmark.run(NewBenchmarkRunConfiguration().NumberOfOperations(100).ParallelOperations(1))
 	parallel := benchmark.run(NewBenchmarkRunConfiguration().NumberOfOperations(100).ParallelOperations(10))
 
-	assert.Condition(t, sequential.Runtime > parallel.Runtime)
+	assert.Condition(t, greaterThan(parallel.Runtime.Seconds(), sequential.Runtime.Seconds()))
 }
 
 func Test_PerformsProvidedNumberOfWriteOperations(t *testing.T) {
@@ -95,6 +95,20 @@ func Test_BenchmarkResultCanBeConvertedToString(t *testing.T) {
 	assert.NotEmpty(t, string(result))
 }
 
+
+// Comparison function that is used to assert that actual is greater than expected.
+func greaterThan(expected float64, actual float64) assert.Comparison {
+	return assert.Comparison(func () bool {
+		return actual > expected
+	})
+}
+
+// Comparison function that is used to assert that actual is greater than or equal to expected.
+func greaterThanOrEqual(expected float64, actual float64) assert.Comparison {
+	return assert.Comparison(func () bool {
+		return actual >= expected
+	})
+}
 
 type operationCountingStore struct {
 	delay time.Duration
