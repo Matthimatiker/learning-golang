@@ -44,6 +44,11 @@ func (config benchmarkRunConfiguration) WriteOperationRatio(value float32) bench
 
 }
 
+// Creates a string representation of the configuration.
+func (config benchmarkRunConfiguration) String() {
+
+}
+
 
 // Contains the result of a benchmark run.
 type benchmarkRunResult struct {
@@ -51,4 +56,9 @@ type benchmarkRunResult struct {
 	Config benchmarkRunConfiguration
 	// The number of seconds the benchmark took to run.
 	RuntimeInSeconds float64
+}
+
+// Creates a string representation of the result.
+func (result benchmarkRunResult) String() {
+
 }
