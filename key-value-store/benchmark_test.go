@@ -20,7 +20,7 @@ func Test_BenchmarkConfigurationCanBeConfigured(t *testing.T) {
 
 	assert.Equal(t, 100, config.numberOfOperations)
 	assert.Equal(t, 10, config.parallelOperations)
-	assert.Equal(t, 0.5, config.writeOperationRatio)
+	assert.Equal(t, float32(0.5), config.writeOperationRatio)
 }
 
 func Test_BenchmarkConfigurationRejectsInvalidRatioValue(t *testing.T) {
