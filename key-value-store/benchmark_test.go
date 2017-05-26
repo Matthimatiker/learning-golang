@@ -4,6 +4,7 @@ import (
 	"testing"
 	"github.com/stretchr/testify/assert"
 	"time"
+	"sync/atomic"
 )
 
 func Test_BenchmarkConfigurationProvidesSensibleDefaultValues(t *testing.T) {
@@ -112,8 +113,8 @@ func greaterThanOrEqual(expected float64, actual float64) assert.Comparison {
 
 type operationCountingStore struct {
 	delay time.Duration
-	read int
-	write int
+	read int32
+	write int32
 }
 
 // Creates a key-value store mock that counts the number of read/write operations.
@@ -131,19 +132,19 @@ func (store *operationCountingStore) SetDelay(duration time.Duration) {
 
 func (store *operationCountingStore) Get(key string) string {
 	time.Sleep(store.delay)
-	store.read++
+	atomic.AddInt32(&store.read, 1)
 	// Return a dummy value, it is not important here.
 	return ""
 }
 
 func (store *operationCountingStore) Set(key string, value string) {
 	time.Sleep(store.delay)
-	store.write++
+	atomic.AddInt32(&store.write, 1)
 }
 
 // Returns the whole number of executed operations.
 func (store *operationCountingStore) NumberOfOperations() int {
-	return store.read + store.write
+	return int(store.read + store.write)
 }
 
 // Ratio of writes compared to reads.
