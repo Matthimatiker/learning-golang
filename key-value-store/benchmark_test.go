@@ -32,7 +32,7 @@ func Test_BenchmarkConfigurationRejectsInvalidRatioValue(t *testing.T) {
 func Test_BenchmarkConfigurationCanBeConvertedToString(t *testing.T) {
 	config := NewBenchmarkRunConfiguration()
 
-	assert.NotEmpty(t, string(config))
+	assert.NotEmpty(t, config.String())
 }
 
 func Test_BenchmarkExecutesCorrectOfOperationsInCaseOfSequentialExecution(t *testing.T) {
@@ -92,7 +92,7 @@ func Test_BenchmarkResultCanBeConvertedToString(t *testing.T) {
 		Config: config,
 	}
 
-	assert.NotEmpty(t, string(result))
+	assert.NotEmpty(t, result.String())
 }
 
 

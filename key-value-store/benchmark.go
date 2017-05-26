@@ -79,5 +79,5 @@ type benchmarkRunResult struct {
 
 // Creates a string representation of the result.
 func (result benchmarkRunResult) String() string {
-	return string(result.Config) + "/n-------\nRuntime: " + string(result.Runtime)
+	return result.Config.String() + "/n-------\nRuntime: " + result.Runtime.String()
 }
