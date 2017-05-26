@@ -149,5 +149,5 @@ func (store *operationCountingStore) NumberOfOperations() int {
 // Ratio of writes compared to reads.
 // Returns a value between 0.0 and 1.0.
 func (store *operationCountingStore) WriteRatio() float32 {
-	return store.write / store.NumberOfOperations()
+	return float32(store.write) / float32(store.NumberOfOperations())
 }
