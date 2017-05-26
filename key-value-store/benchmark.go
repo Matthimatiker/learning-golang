@@ -5,6 +5,18 @@ type benchmark struct {
 	operations chan func(SimpleKeyValueStore)
 }
 
+func NewBenchmark(store SimpleKeyValueStore) *benchmark {
+
+}
+
+
+// Runs a benchmark against the store.
+//
+func (benchmark *benchmark) run(config benchmarkRunConfiguration) float64 {
+
+}
+
+
 // Encapsulates a configuration for a benchmark run.
 type benchmarkRunConfiguration struct {
 	numberOfOperations int
@@ -30,15 +42,5 @@ func (config benchmarkRunConfiguration) ParallelOperations(value int) benchmarkR
 // Defines the number of write operations among the whole number of operations.
 // value must be a float between 0.0 and 1.0.
 func (config benchmarkRunConfiguration) WriteOperationRatio(value float32) benchmarkRunConfiguration {
-
-}
-
-func NewBenchmark(store SimpleKeyValueStore) *benchmark {
-
-}
-
-// Runs a benchmark against the store.
-//
-func (benchmark *benchmark) run(config benchmarkRunConfiguration) float64 {
 
 }
