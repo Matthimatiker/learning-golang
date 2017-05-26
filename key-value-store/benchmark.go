@@ -22,7 +22,7 @@ func NewBenchmark(store SimpleKeyValueStore) *benchmark {
 func (benchmark *benchmark) run(config benchmarkRunConfiguration) benchmarkRunResult {
 	// Use random number generator with fixed seed to ensure that runs are deterministic.
 	random := rand.New(rand.NewSource(0))
-	operations := make(chan func (store SimpleKeyValueStore), 0)
+	operations := make(chan func (store SimpleKeyValueStore), config.parallelOperations)
 	// Prepare several workers, depending on the number of parallel operations.
 	workers := &sync.WaitGroup{}
 	for i := 0; i < config.parallelOperations; i++ {
