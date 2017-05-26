@@ -59,7 +59,7 @@ func Test_BenchmarkReturnsValidResult(t *testing.T) {
 
 	result := benchmark.run(NewBenchmarkRunConfiguration().NumberOfOperations(100).ParallelOperations(10))
 
-	assert.Condition(t, result.RuntimeInSeconds > 0)
+	assert.Condition(t, result.Runtime.Seconds() > 0.0)
 }
 
 func Test_ParallelExecutionIsFasterThanSequential(t *testing.T) {
@@ -70,7 +70,7 @@ func Test_ParallelExecutionIsFasterThanSequential(t *testing.T) {
 	sequential := benchmark.run(NewBenchmarkRunConfiguration().NumberOfOperations(100).ParallelOperations(1))
 	parallel := benchmark.run(NewBenchmarkRunConfiguration().NumberOfOperations(100).ParallelOperations(10))
 
-	assert.Condition(t, sequential.RuntimeInSeconds > parallel.RuntimeInSeconds)
+	assert.Condition(t, sequential.Runtime > parallel.Runtime)
 }
 
 func Test_PerformsProvidedNumberOfWriteOperations(t *testing.T) {
@@ -88,7 +88,7 @@ func Test_BenchmarkResultCanBeConvertedToString(t *testing.T) {
 	config := NewBenchmarkRunConfiguration()
 
 	result := benchmarkRunResult{
-		RuntimeInSeconds: 5,
+		Runtime: time.Duration(5) * time.Second,
 		Config: config,
 	}
 

@@ -1,5 +1,7 @@
 package key_value_store
 
+import "time"
+
 type benchmark struct {
 	store SimpleKeyValueStore
 	operations chan func(SimpleKeyValueStore)
@@ -53,9 +55,9 @@ func (config benchmarkRunConfiguration) String() {
 // Contains the result of a benchmark run.
 type benchmarkRunResult struct {
 	// The configuration that has been applied.
-	Config benchmarkRunConfiguration
+	Config  benchmarkRunConfiguration
 	// The number of seconds the benchmark took to run.
-	RuntimeInSeconds float64
+	Runtime time.Duration
 }
 
 // Creates a string representation of the result.
