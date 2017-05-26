@@ -35,6 +35,8 @@ func (benchmark *benchmark) run(config benchmarkRunConfiguration) benchmarkRunRe
 		}()
 	}
 	start := time.Now()
+	// TODO push operations from goroutine; add to wait group  with workers
+	// TODO more keys
 	// Push the configured number of operations to the channel.
 	// At the same time, the workers start to read and execute the operations.
 	for i := 0; i < config.numberOfOperations; i++ {
