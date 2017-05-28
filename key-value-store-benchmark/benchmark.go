@@ -3,10 +3,14 @@ package main
 import (
 	"fmt"
 	"github.com/matthimatiker/learning-golang/key-value-store"
+	"net/http/httptest"
 )
 
 func main() {
-	scenarios := [1]struct{
+	server := httptest.NewServer(key_value_store.NewStoreHandler(key_value_store.NewInMemoryStore()))
+	defer server.Close()
+
+	scenarios := [...]struct{
 		headline string
 		store key_value_store.SimpleKeyValueStore
 	}{
@@ -14,8 +18,12 @@ func main() {
 			headline: "# InMemoryStore",
 			store: key_value_store.NewInMemoryStore(),
 		},
+		{
+			headline: "# WebClient against InMemoryStore",
+			store: key_value_store.NewWebClient(server.URL),
+		},
 	}
-	configurations := [2]struct {
+	configurations := [...]struct {
 		headline string
 		config   key_value_store.BenchmarkRunConfiguration
 	}{
