@@ -34,7 +34,6 @@ func (benchmark *benchmark) Run(config benchmarkRunConfiguration) benchmarkRunRe
 	}
 	start := time.Now()
 	workers.Run()
-	// TODO more keys
 	// Wait for all workers to complete.
 	workers.Wait()
 	return benchmarkRunResult{
