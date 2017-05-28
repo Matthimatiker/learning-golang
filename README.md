@@ -84,10 +84,10 @@ A slice is a list of variable length.
 
 Declaration: ``[]type{}``
 
+- ``slice := make(type, len, capacity)``
 - ``newSlice = append(slice, “a”, “b”)``
 - ``newSlice = slice[start : end]``
     - end optional: ``slice[start:]``
-- ``slice := make(type, len, capacity)``
 - cap(slice), len(slice)
 - capacity is doubled when reached
 
