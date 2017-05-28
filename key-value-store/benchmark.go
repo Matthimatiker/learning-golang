@@ -172,11 +172,16 @@ type benchmarkRunResult struct {
 	Runtime time.Duration
 }
 
+// Returns the average runtime per operation.
+func (result benchmarkRunResult) AvgRuntime() time.Duration {
+	return result.Runtime / time.Duration(result.Config.numberOfOperations)
+}
+
 // Creates a string representation of the result.
 func (result benchmarkRunResult) String() string {
 	return fmt.Sprintf(`%s
 	Runtime:
 	- All: %s
 	- Avg. per operation: %s
-	`, result.Config.String(), result.Runtime.String(), result.Runtime / time.Duration(result.Config.numberOfOperations))
+	`, result.Config.String(), result.Runtime.String(), result.AvgRuntime())
 }
