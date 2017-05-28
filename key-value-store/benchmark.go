@@ -11,6 +11,7 @@ type benchmark struct {
 	store SimpleKeyValueStore
 }
 
+// Creates a new benchmark runner for the given store.
 func NewBenchmark(store SimpleKeyValueStore) *benchmark {
 	return &benchmark{
 		store: store,
