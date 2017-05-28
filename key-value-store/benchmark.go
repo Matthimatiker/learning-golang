@@ -25,16 +25,27 @@ func (benchmark *benchmark) run(config benchmarkRunConfiguration) benchmarkRunRe
 	workers.Register(func () {
 		// Use random number generator with fixed seed to ensure that runs are deterministic.
 		random := rand.New(rand.NewSource(0))
+		// Returns a character depending on the given index:
+		// 0 = A
+		// 1 = B
+		// ...
+		toChar := func (i int) string {
+			return string('A' + i)
+		}
+		// Returns a random key in the range A..Z
+		getKey := func () string {
+			return toChar(random.Intn(26))
+		}
 		// Push the configured number of operations to the channel.
 		// At the same time, the workers start to read and execute the operations.
 		for i := 0; i < config.numberOfOperations; i++ {
 			if (random.Float32() < config.writeOperationRatio) {
 				operations <- func (store SimpleKeyValueStore) {
-					store.Set("x", "y")
+					store.Set(getKey(), "hello world")
 				}
 			} else {
 				operations <- func (store SimpleKeyValueStore) {
-					store.Get("x")
+					store.Get(getKey())
 				}
 			}
 		}
