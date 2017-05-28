@@ -24,17 +24,16 @@ func (benchmark *benchmark) run(config benchmarkRunConfiguration) benchmarkRunRe
 	random := rand.New(rand.NewSource(0))
 	operations := make(chan func (store SimpleKeyValueStore), config.parallelOperations)
 	// Prepare several workers, depending on the number of parallel operations.
-	workers := &sync.WaitGroup{}
+	workers := newCoordinator()
 	for i := 0; i < config.parallelOperations; i++ {
-		workers.Add(1)
-		go func () {
+		workers.Register(func () {
 			for operation := range operations {
 				operation(benchmark.store)
 			}
-			workers.Done()
-		}()
+		})
 	}
 	start := time.Now()
+	workers.Run()
 	// TODO push operations from goroutine; add to wait group  with workers
 	// TODO more keys
 	// Push the configured number of operations to the channel.
@@ -58,6 +57,40 @@ func (benchmark *benchmark) run(config benchmarkRunConfiguration) benchmarkRunRe
 		Config: config,
 		Runtime: time.Since(start),
 	}
+}
+
+// Coordinates multiple worker functions.
+type coordinator struct {
+	workers    []func()
+	terminated *sync.WaitGroup
+}
+
+func newCoordinator() *coordinator {
+	return &coordinator{
+		workers: make([]func(), 0),
+		terminated: &sync.WaitGroup{},
+	}
+}
+
+// Registers a worker function.
+func (coordinator *coordinator) Register(worker func()) {
+	coordinator.terminated.Add(1)
+	coordinator.workers = append(coordinator.workers, func () {
+		worker()
+		coordinator.terminated.Done()
+	})
+}
+
+// Starts all workers.
+func (coordinator *coordinator) Run() {
+	for _, worker := range coordinator.workers {
+		go worker()
+	}
+}
+
+// Waits until all workers have finished. Must call Run() first.
+func (coordinator *coordinator) Wait() {
+	coordinator.terminated.Wait()
 }
 
 // Encapsulates a configuration for a benchmark run.
