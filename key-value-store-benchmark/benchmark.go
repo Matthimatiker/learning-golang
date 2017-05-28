@@ -4,11 +4,14 @@ import (
 	"fmt"
 	"github.com/matthimatiker/learning-golang/key-value-store"
 	"net/http/httptest"
+	"os"
 )
 
 func main() {
 	server := httptest.NewServer(key_value_store.NewStoreHandler(key_value_store.NewInMemoryStore()))
 	defer server.Close()
+	fileStore, _ := key_value_store.NewStore(getStoreFile())
+	defer os.Remove(getStoreFile())
 
 	scenarios := [...]struct{
 		headline string
@@ -21,6 +24,10 @@ func main() {
 		{
 			headline: "# WebClient against InMemoryStore",
 			store: key_value_store.NewWebClient(server.URL),
+		},
+		{
+			headline: "# File based store",
+			store: fileStore,
 		},
 	}
 	configurations := [...]struct {
@@ -46,4 +53,8 @@ func main() {
 			fmt.Print(result.String() + "\n")
 		}
 	}
+}
+
+func getStoreFile() string {
+	return os.TempDir() + "/key-value-store-benchmark.store"
 }
