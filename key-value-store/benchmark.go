@@ -174,5 +174,9 @@ type benchmarkRunResult struct {
 
 // Creates a string representation of the result.
 func (result benchmarkRunResult) String() string {
-	return result.Config.String() + "/n-------\nRuntime: " + result.Runtime.String()
+	return fmt.Sprintf(`%s
+	Runtime:
+	- All: %s
+	- Avg. per operation: %s
+	`, result.Config.String(), result.Runtime.String(), result.Runtime / time.Duration(result.Config.numberOfOperations))
 }
