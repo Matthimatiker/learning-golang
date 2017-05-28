@@ -19,7 +19,8 @@ func NewBenchmark(store SimpleKeyValueStore) *benchmark {
 
 // Runs a benchmark against the store.
 //
-func (benchmark *benchmark) run(config benchmarkRunConfiguration) benchmarkRunResult {
+// The provided configuration defines number of operations, parallelism etc.
+func (benchmark *benchmark) Run(config benchmarkRunConfiguration) benchmarkRunResult {
 	operations := make(chan func (store SimpleKeyValueStore), config.parallelOperations)
 	workers := newCoordinator()
 	workers.Register(func () {

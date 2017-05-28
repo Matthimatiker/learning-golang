@@ -40,7 +40,7 @@ func Test_BenchmarkExecutesCorrectOfOperationsInCaseOfSequentialExecution(t *tes
 	store := newOperationCountingStore()
 	benchmark := NewBenchmark(store)
 
-	benchmark.run(NewBenchmarkRunConfiguration().NumberOfOperations(100).ParallelOperations(1))
+	benchmark.Run(NewBenchmarkRunConfiguration().NumberOfOperations(100).ParallelOperations(1))
 
 	assert.Equal(t, 100, store.NumberOfOperations())
 }
@@ -49,7 +49,7 @@ func Test_BenchmarkExecutesCorrectNumberOfOperationsInCaseOfParallelExecution(t 
 	store := newOperationCountingStore()
 	benchmark := NewBenchmark(store)
 
-	benchmark.run(NewBenchmarkRunConfiguration().NumberOfOperations(100).ParallelOperations(10))
+	benchmark.Run(NewBenchmarkRunConfiguration().NumberOfOperations(100).ParallelOperations(10))
 
 	assert.Equal(t, 100, store.NumberOfOperations())
 }
@@ -58,7 +58,7 @@ func Test_BenchmarkReturnsValidResult(t *testing.T) {
 	store := newOperationCountingStore()
 	benchmark := NewBenchmark(store)
 
-	result := benchmark.run(NewBenchmarkRunConfiguration().NumberOfOperations(100).ParallelOperations(10))
+	result := benchmark.Run(NewBenchmarkRunConfiguration().NumberOfOperations(100).ParallelOperations(10))
 
 	assert.Condition(t, greaterThan(0.0, result.Runtime.Seconds()))
 }
@@ -68,8 +68,8 @@ func Test_ParallelExecutionIsFasterThanSequential(t *testing.T) {
 	store.SetDelay(time.Duration(2) * time.Millisecond)
 	benchmark := NewBenchmark(store)
 
-	sequential := benchmark.run(NewBenchmarkRunConfiguration().NumberOfOperations(100).ParallelOperations(1))
-	parallel := benchmark.run(NewBenchmarkRunConfiguration().NumberOfOperations(100).ParallelOperations(10))
+	sequential := benchmark.Run(NewBenchmarkRunConfiguration().NumberOfOperations(100).ParallelOperations(1))
+	parallel := benchmark.Run(NewBenchmarkRunConfiguration().NumberOfOperations(100).ParallelOperations(10))
 
 	assert.Condition(t, greaterThan(parallel.Runtime.Seconds(), sequential.Runtime.Seconds()))
 }
@@ -78,7 +78,7 @@ func Test_PerformsProvidedNumberOfWriteOperations(t *testing.T) {
 	store := newOperationCountingStore()
 	benchmark := NewBenchmark(store)
 
-	benchmark.run(NewBenchmarkRunConfiguration().NumberOfOperations(10000).WriteOperationRatio(0.4))
+	benchmark.Run(NewBenchmarkRunConfiguration().NumberOfOperations(10000).WriteOperationRatio(0.4))
 
 	// The store might work with random heuristics. Therefore, a bigger
 	// number of operations and a tolerance zone is used in this test.
