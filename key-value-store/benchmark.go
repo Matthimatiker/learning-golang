@@ -20,11 +20,28 @@ func NewBenchmark(store SimpleKeyValueStore) *benchmark {
 // Runs a benchmark against the store.
 //
 func (benchmark *benchmark) run(config benchmarkRunConfiguration) benchmarkRunResult {
-	// Use random number generator with fixed seed to ensure that runs are deterministic.
-	random := rand.New(rand.NewSource(0))
 	operations := make(chan func (store SimpleKeyValueStore), config.parallelOperations)
-	// Prepare several workers, depending on the number of parallel operations.
 	workers := newCoordinator()
+	workers.Register(func () {
+		// Use random number generator with fixed seed to ensure that runs are deterministic.
+		random := rand.New(rand.NewSource(0))
+		// Push the configured number of operations to the channel.
+		// At the same time, the workers start to read and execute the operations.
+		for i := 0; i < config.numberOfOperations; i++ {
+			if (random.Float32() < config.writeOperationRatio) {
+				operations <- func (store SimpleKeyValueStore) {
+					store.Set("x", "y")
+				}
+			} else {
+				operations <- func (store SimpleKeyValueStore) {
+					store.Get("x")
+				}
+			}
+		}
+		// Close the channel to ensure that the workers will terminate when the channel is empty.
+		close(operations)
+	})
+	// Prepare several workers, depending on the number of parallel operations.
 	for i := 0; i < config.parallelOperations; i++ {
 		workers.Register(func () {
 			for operation := range operations {
@@ -34,23 +51,7 @@ func (benchmark *benchmark) run(config benchmarkRunConfiguration) benchmarkRunRe
 	}
 	start := time.Now()
 	workers.Run()
-	// TODO push operations from goroutine; add to wait group  with workers
 	// TODO more keys
-	// Push the configured number of operations to the channel.
-	// At the same time, the workers start to read and execute the operations.
-	for i := 0; i < config.numberOfOperations; i++ {
-		if (random.Float32() < config.writeOperationRatio) {
-			operations <- func (store SimpleKeyValueStore) {
-				store.Set("x", "y")
-			}
-		} else {
-			operations <- func (store SimpleKeyValueStore) {
-				store.Get("x")
-			}
-		}
-	}
-	// Close the channel to ensure that the workers will terminate when the channel is empty.
-	close(operations)
 	// Wait for all workers to complete.
 	workers.Wait()
 	return benchmarkRunResult{
