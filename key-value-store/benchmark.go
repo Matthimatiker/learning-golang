@@ -21,7 +21,7 @@ func NewBenchmark(store SimpleKeyValueStore) *benchmark {
 // Runs a benchmark against the store.
 //
 // The provided configuration defines number of operations, parallelism etc.
-func (benchmark *benchmark) Run(config benchmarkRunConfiguration) benchmarkRunResult {
+func (benchmark *benchmark) Run(config BenchmarkRunConfiguration) benchmarkRunResult {
 	operations := make(chan func (store SimpleKeyValueStore), config.parallelOperations)
 	workers := newCoordinator()
 	workers.Register(func () {
@@ -117,15 +117,15 @@ func (coordinator *coordinator) Wait() {
 }
 
 // Encapsulates a configuration for a benchmark run.
-type benchmarkRunConfiguration struct {
+type BenchmarkRunConfiguration struct {
 	numberOfOperations  int
 	parallelOperations  int
 	writeOperationRatio float32
 }
 
 // Creates a new benchmark configuration with default values.
-func NewBenchmarkRunConfiguration() benchmarkRunConfiguration {
-	return benchmarkRunConfiguration{
+func NewBenchmarkRunConfiguration() BenchmarkRunConfiguration {
+	return BenchmarkRunConfiguration{
 		numberOfOperations:  1000,
 		parallelOperations:  1,
 		writeOperationRatio: 0.2,
@@ -133,20 +133,20 @@ func NewBenchmarkRunConfiguration() benchmarkRunConfiguration {
 }
 
 // Sets the number of operations that will be executed and returns the new configuration.
-func (config benchmarkRunConfiguration) NumberOfOperations(value int) benchmarkRunConfiguration {
+func (config BenchmarkRunConfiguration) NumberOfOperations(value int) BenchmarkRunConfiguration {
 	config.numberOfOperations = value
 	return config
 }
 
 // Sets the number of operations that will be executed in parallel and returns the new configuration.
-func (config benchmarkRunConfiguration) ParallelOperations(value int) benchmarkRunConfiguration {
+func (config BenchmarkRunConfiguration) ParallelOperations(value int) BenchmarkRunConfiguration {
 	config.parallelOperations = value
 	return config
 }
 
 // Defines the number of write operations among the whole number of operations.
 // value must be a float between 0.0 and 1.0.
-func (config benchmarkRunConfiguration) WriteOperationRatio(value float32) benchmarkRunConfiguration {
+func (config BenchmarkRunConfiguration) WriteOperationRatio(value float32) BenchmarkRunConfiguration {
 	if value < 0.0 || value > 1.0 {
 		panic("Write ration value must be in range [0.0..1.0]")
 	}
@@ -155,7 +155,7 @@ func (config benchmarkRunConfiguration) WriteOperationRatio(value float32) bench
 }
 
 // Creates a string representation of the configuration.
-func (config benchmarkRunConfiguration) String() string {
+func (config BenchmarkRunConfiguration) String() string {
 	return fmt.Sprintf(`
 	Config:
 	- Number of operations: %v
@@ -167,7 +167,7 @@ func (config benchmarkRunConfiguration) String() string {
 // Contains the result of a benchmark run.
 type benchmarkRunResult struct {
 	// The configuration that has been applied.
-	Config benchmarkRunConfiguration
+	Config  BenchmarkRunConfiguration
 	// The number of seconds the benchmark took to run.
 	Runtime time.Duration
 }
