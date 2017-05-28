@@ -24,41 +24,12 @@ func (benchmark *benchmark) Run(config benchmarkRunConfiguration) benchmarkRunRe
 	operations := make(chan func (store SimpleKeyValueStore), config.parallelOperations)
 	workers := newCoordinator()
 	workers.Register(func () {
-		// Use random number generator with fixed seed to ensure that runs are deterministic.
-		random := rand.New(rand.NewSource(0))
-		// Returns a character depending on the given index:
-		// 0 = A
-		// 1 = B
-		// ...
-		toChar := func (i int) string {
-			return string('A' + i)
-		}
-		// Returns a random key in the range A..Z
-		getKey := func () string {
-			return toChar(random.Intn(26))
-		}
-		// Push the configured number of operations to the channel.
-		// At the same time, the workers start to read and execute the operations.
-		for i := 0; i < config.numberOfOperations; i++ {
-			if (random.Float32() < config.writeOperationRatio) {
-				operations <- func (store SimpleKeyValueStore) {
-					store.Set(getKey(), "hello world")
-				}
-			} else {
-				operations <- func (store SimpleKeyValueStore) {
-					store.Get(getKey())
-				}
-			}
-		}
-		// Close the channel to ensure that the workers will terminate when the channel is empty.
-		close(operations)
+		benchmark.produce(operations, config.numberOfOperations, config.writeOperationRatio)
 	})
 	// Prepare several workers, depending on the number of parallel operations.
 	for i := 0; i < config.parallelOperations; i++ {
 		workers.Register(func () {
-			for operation := range operations {
-				operation(benchmark.store)
-			}
+			benchmark.consume(operations)
 		})
 	}
 	start := time.Now()
@@ -69,6 +40,45 @@ func (benchmark *benchmark) Run(config benchmarkRunConfiguration) benchmarkRunRe
 	return benchmarkRunResult{
 		Config: config,
 		Runtime: time.Since(start),
+	}
+}
+
+// Produced the requested number of operations and writes them to the channel.
+func (benchmark *benchmark) produce(operations chan func (store SimpleKeyValueStore), numberOfOperations int, writeOperationRatio float32) {
+	// Use random number generator with fixed seed to ensure that runs are deterministic.
+	random := rand.New(rand.NewSource(0))
+	// Returns a character depending on the given index:
+	// 0 = A
+	// 1 = B
+	// ...
+	toChar := func (i int) string {
+		return string('A' + i)
+	}
+	// Returns a random key in the range A..Z
+	getKey := func () string {
+		return toChar(random.Intn(26))
+	}
+	// Push the configured number of operations to the channel.
+	// At the same time, the workers start to read and execute the operations.
+	for i := 0; i < numberOfOperations; i++ {
+		if (random.Float32() < writeOperationRatio) {
+			operations <- func (store SimpleKeyValueStore) {
+				store.Set(getKey(), "hello world")
+			}
+		} else {
+			operations <- func (store SimpleKeyValueStore) {
+				store.Get(getKey())
+			}
+		}
+	}
+	// Close the channel to ensure that the consumers will terminate when the channel is empty.
+	close(operations)
+}
+
+// Reads operations from the given channel and applies them to the store.
+func (benchmark *benchmark) consume(operations chan func (store SimpleKeyValueStore)) {
+	for operation := range operations {
+		operation(benchmark.store)
 	}
 }
 
