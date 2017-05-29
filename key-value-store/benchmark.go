@@ -97,7 +97,6 @@ func newCoordinator() *coordinator {
 
 // Registers a worker function.
 func (coordinator *coordinator) Register(worker func()) {
-	coordinator.terminated.Add(1)
 	coordinator.workers = append(coordinator.workers, func () {
 		worker()
 		coordinator.terminated.Done()
@@ -106,6 +105,7 @@ func (coordinator *coordinator) Register(worker func()) {
 
 // Starts all workers.
 func (coordinator *coordinator) Run() {
+	coordinator.terminated.Add(len(coordinator.workers))
 	for _, worker := range coordinator.workers {
 		go worker()
 	}
