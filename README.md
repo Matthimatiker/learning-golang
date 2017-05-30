@@ -295,10 +295,3 @@ Import functions from package into current namespace by prefixing with dot:
 
 TODO: details: go generate to add build steps (seen in mocking chapter)
 
-
-Übung:
-
-- Last-Test für Key-Value-Store
-  - parallele Go-Routinen (Anzahl definierbar)
-  - wie viele Calls für Go-Routinen definierbar
-  - Go-Routines read instructions from channel
