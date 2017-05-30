@@ -293,6 +293,8 @@ Import functions from package into current namespace by prefixing with dot:
         . "net/http"
     )
 
+TODO: details: go generate to add build steps (seen in mocking chapter)
+
 
 Übung:
 
