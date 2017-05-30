@@ -292,6 +292,13 @@ Import functions from package into current namespace by prefixing with dot:
     import (
         . "net/http"
     )
+    
+Anonymous import, loads the package and executes init functions:
+
+     import (
+         _ "my/package"
+     )
+     
 
 TODO: details: go generate to add build steps (seen in mocking chapter)
 
