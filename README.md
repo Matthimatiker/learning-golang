@@ -302,3 +302,15 @@ Anonymous import, loads the package and executes init functions:
 
 TODO: details: go generate to add build steps (seen in mocking chapter)
 
+
+### Dependency Management ###
+
+Initializes dependency management:
+
+    go mod init github.com/Matthimatiker/learning-golang
+
+This creates a `go.mod` file that lists dependencies and their versions.
+
+Change the Go version of the project:
+
+    go mod edit -go=1.13
